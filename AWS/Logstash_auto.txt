@@ -1,0 +1,29 @@
+#Instalar Dockers
+sudo yum update -y
+sudo yum install -y docker
+sudo service docker start
+
+#Crec que aquesta linea es inecesaria:
+sudo usermod -a -G docker ec2-user
+
+# Instalar Github y descarregar nostre repo
+sudo yum install -y git
+
+git clone https://github.com/nostre_repo
+
+#crear un build de logstash amb el agreggate
+docker build -t logstash_agreggate /home/ec2-user/AWS/docker_aggregate/
+
+#Generar els fichers de logs (500k=> son un milio pero el logstash nomes agafara les traces de fi procesant les de inci tambe)
+chmod -x /home/ec2-user/AWS/logs/log_peticiones_exactas/log_peticiones_exactas.jar
+
+java -jar /home/ec2-user/AWS/logs/log_peticiones_exactas/log_peticiones_exactas.jar peticiones /home/ec2-user/AWS/logs/log_peticiones_exactas/services.properties 25000
+
+mv /home/ec2-user/AWS/logstash/logs/rastreator-delta.log.1 /home/ec2-user/AWS/logstash/logs/rastreator-delta1.log
+
+mv /home/ec2-user/AWS/logstash/logs/rastreator-delta.log.2 /home/ec2-user/AWS/logstash/logs/rastreator-delta2.log
+
+mv /home/ec2-user/AWS/logstash/logs/rastreator-delta.log.3 /home/ec2-user/AWS/logstash/logs/rastreator-delta3.log
+
+#executar el logsatsh amb el plugin agregate(i la configuracio del git)
+docker run -it --name logstash --rm -v /home/ec2-user/AWS/logstash:/config-dir logstash_agreggate logstash -f /config-dir/logstash.conf

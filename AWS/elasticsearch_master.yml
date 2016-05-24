@@ -1,0 +1,31 @@
+cluster.name: elasticsearch
+
+node.name: Master
+
+node.master: true
+node.data: true
+
+index.number_of_shards: 6
+
+index.number_of_replicas: 6
+
+bootstrap.mlockall: true
+
+gateway.recover_after_nodes: 1
+gateway.recover_after_time: 10m
+gateway.expected_nodes: 2
+
+action.disable_close_all_indices: true
+action.disable_delete_all_indices: true
+action.disable_shutdown: true
+
+indices.recovery.max_bytes_per_sec: 100mb
+
+
+
+network.host:172.168.0.1
+http.enabled: true
+
+http.port: 9200
+
+transport.tcp.port: 9300

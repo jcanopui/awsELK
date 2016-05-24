@@ -1,0 +1,22 @@
+jobs C:\Users\abozalch\Downloads\ELK-logGenerator\src\main\resources\alone-system1.properties true
+
+peticiones C:\Users\abozalch\Downloads\ELK-logGenerator\src\main\resources\services.properties true
+
+chmod -x log.jar
+
+java -jar log.jar jobs alone-system1.properties true
+
+java -jar log.jar peticiones services.properties true
+
+
+jobs
+
+2016-04-27 12:32:54 +0200 [cdf85a4d992c37e12b72f3fbdabfcb7a] [INFO] [FIN] [jobName: DELTA - Aceptacion Evolutivo AM Etiquetar version] [jobStatus: KO] [jobFinishDate: 2015-11-20 14:30:01]
+2016-04-27 12:32:55 +0200 [5de4c84eac65e018c7e56d96ac1ba048] [INFO] [FIN] [jobName: DELTA - Aceptacion Evolutivo AM Etiquetar version] [jobStatus: OK] [jobFinishDate: 2015-11-20 14:30:01]
+2016-04-27 12:33:13 +0200 [adf4689a0f171f95aae847a8e34d25ff] [INFO] [FIN] [jobName: DELTA - Aceptacion Evolutivo AM Etiquetar version] [jobStatus: KO] [jobFinishDate: 2015-11-20 14:30:01]
+
+peticiones
+
+2016-04-27 12:33:53 +0200 [7a6b952ecda7885bead957f462c36150] [DEBUG] [INICIO] [Servicio: isf.servlets.gcqs.GcqsQuerySystemServlet] [Metodo: execute]
+2016-04-27 12:33:54 +0200 [7a6b952ecda7885bead957f462c36150] [INFO] [FIN] [OK] [Servicio: isf.servlets.gcqs.GcqsQuerySystemServlet] [Metodo: execute] [Tiempo_peticion: 1000 ms]
+2016-04-27 12:33:56 +0200 [ef9cf0b5cdf8ea61dc746cf4d0cdfd69] [DEBUG] [INICIO] [Servicio: isf.servlets.gcqs.GcqsQuerySystemServlet] [Metodo: execute]

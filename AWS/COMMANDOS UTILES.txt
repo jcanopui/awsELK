@@ -1,0 +1,164 @@
+#IP PUBLICA ELASTICSEARCH_LOGSTASH_KIBANA
+http://52.203.26.131/
+
+
+Commandos:
+
+##########
+Elasticsearch-> configurar la ruta de la data
+
+
+#Unicament es configura la ruta no es necesita utilitzar cap tipus de configuració, excepcio de la execusio de root dins del docker(per afegir poca configuració, elastic search te comandes Des.elquesigui)
+docker run --name some-elasticsearch -p 9200:9200 -p 9300:9300 -v /home/ec2-user/AWS/Elasticsearch/ElasticsearchData:/usr/share/elasticsearch/data elasticsearch -Des.insecure.allow.root=true
+
+docker run --name some-elasticsearch6 -p 9200:9200 -p 9300:9300 -v /home/ec2-user/AWS/Elasticsearch/ElasticsearchData6:/usr/share/elasticsearch/data elasticsearch -Des.insecure.allow.root=true
+
+#Es per executar el elastic search amb confichguració i amb una ruta per la data
+docker run --name some-elasticsearch -p 9200:9200 -p 9300:9300 -v /home/ec2-user/AWS/Elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml -v /home/ec2-user/AWS/Elasticsearch/ElasticsearchData:/usr/share/elasticsearch/data elasticsearch -Des.insecure.allow.root=true
+
+sudo docker run --name elasticsearch -p 9200:9200 -p 9300:9300 -v /home/ec2-user/AWS/Elasticsearch/config/elasticsearch_master.yml:/usr/share/elasticsearch/config/elasticsearch.yml -v /home/ec2-user/AWS/Elasticsearch/ElasticsearchData4:/usr/share/elasticsearch/data elasticsearch -Des.insecure.allow.root=true
+
+#Son probes per exectuar el elasticsearch com a master i donatli nom al node
+sudo docker run --name elasticsearch -p 9200:9200 -p 9300:9300 -v /home/ec2-user/AWS/Elasticsearch/ElasticsearchData2:/usr/share/elasticsearch/data elasticsearch -Des.insecure.allow.root=true -Des.node.name="Master" -Des.node.master="true"
+
+#########
+
+#########
+KIBANA:
+
+#Unicament es configuran els ports i per veurel configures el ec2 perque tigui el port obert
+docker run --name some-kibana --link some-elasticsearch:elasticsearch -p 5601:5601  kibana
+
+docker run --name some-kibana6 --link some-elasticsearch6:elasticsearch -p 5601:5601  kibana
+
+#########
+
+
+#########
+Logstash:-> configurar ruta // mirar porque se guardan todos los messages
+
+#Es configura el volum de la ruta on tindrás la configuració logstash.conf i els paterns(mes info al document word)
+docker run -it --name logstash --rm -v /home/ec2-user/AWS/logstash:/config-dir logstash logstash -f /config-dir/logstash.conf
+
+docker run -it --name logstashPaaS --rm -v /home/ec2-user/AWS/logstash:/config-dir logstash -f /config-dir/logstash_PaaS.conf
+
+
+#########
+
+#########
+LOG:->
+
+chmod -x log.jar
+
+#Per executar jobs infinits(no utilitzem aquest tipus de logs encara, els log4j es configura diferent per jobs que per peticions)
+java -jar log.jar jobs alone-system1.properties true
+
+#Per executar peticiones infinitas(els log4j es configura diferent per jobs que per peticions)
+java -jar log.jar peticiones services.properties true
+
+#Per escollir el numero de peticiones exactes //25000=1000000
+java -jar log_peticiones_exactas.jar peticiones services.properties 25000
+
+#########
+#########
+#########
+
+# INFORMACIO SOBRE EL BUG QUE VA TREURE LA EXCECIO DE ELASTCISEARCH
+process id docker inspect --format '{{ .State.Pid }}' ca9f198b047e
+
+https://underyx.me/2015/05/18/raising-the-maximum-number-of-file-descriptors
+
+https://github.com/elastic/kibana/issues/5170
+
+##########
+
+##########
+
+#Executar per darrere els jars, tambe per tancar procesos etc
+ps aux | grep -i java
+
+
+kill -KILL PID
+
+nohup java -jar log.jar jobs alone-system1.properties true &
+
+nohup java -jar log.jar peticiones services.properties true &
+
+##########
+
+##########
+
+#Per comprobar que el kibana esta actiu
+curl -XGET 'http://localhost:5601/'
+
+#Per que mostri quinas dades te el elasticsearch i si esta actiu
+curl -XGET 'http://172.17.0.2:9200/_search?size=50&pretty=true'
+
+#Per buidar i eliminar totes les entrades del elasticsearch
+curl -XDELETE 'http://172.17.0.2:9200/_all'
+
+#Per comprobar quants nodes hi ha en el cluster i si estan actius
+/_cluster/health?pretty=true
+
+#Probes per executar un elasticsearch node(NO FUNCIONA ENCARA)
+sudo docker run --name elasticsearch-node -p 9200:9200 -p 9300:9300 -v /home/ec2-user/AWS/elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml elasticsearch -Des.insecure.allow.root=true
+
+sudo docker run --name elasticsearch-node -p 9200:9200 -p 9300:9300 elasticsearch -Des.node.master="false" -Des.node.name=${HOSTNAME} -Des.cluster.name=elasticsearch -Des.discovery.zen.ping.unicast.hosts="52.203.26.131:9300" -Des.network.host="52.90.126.66" -Des.insecure.allow.root=true
+
+##########
+
+##########
+
+#Multiline
+    
+codec => multiline {
+      # Grok pattern names are valid! :)
+      patterns_dir =>"/config-dir/Patterns"
+      pattern => "^%{TIMESTAMP} "
+      negate => true
+      what => previous
+    }
+
+pattern => "(?m)<%{POSINT:syslog_pri}>(?:%{SPACE})%{GREEDYDATA:message_remainder}"
+
+
+        	 aggregate {
+				task_id => "%{Id_Peticion}"
+       			code => "map['TIMSESTAMP_ENVIADA'] = event['timestamp']"
+       			map_action => "create"
+     		}
+
+ 		aggregate {
+					task_id => "%{Id_Peticion}"
+       				code => "event['Inicio_peticion']= map['TIMSESTAMP_ENVIADA']"
+       				end_of_task => true
+     		}
+
+else {
+                mutate{ 
+			add_field =>["Veces_procesada", 0]
+			
+
+                }
+        }
+
+
+
+
+########
+
+docker run -it --name logstash --rm -v /home/ec2-user/AWS/logstash:/config-dir logstash_agreggate logstash -f /config-dir/logstash.conf
+
+map['TIMESTAMP_ENVIADA']
+
+
+logstash_agreggate
+
+
+                        code => "event['Parametros2'] = holaa"
+
+                grok {
+                 remove_field => [ "Tiempo_peticion" ]
+                }
+
+drop {}
