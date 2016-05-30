@@ -1,0 +1,32 @@
+ Map: {
+ "parseTime3"=>1464248316} ; 
+ 
+ EventData: {
+ "message"=>"2016-05-26 07:38:36 +0000 [DummyUser65] [56564132390f05bf5dd82a0f525a842c] [1c314871dc809d947b78c7eaf55fd18a] [INFO] [FIN] [OK] [Servicio: isf.servlets.ServicioDummy1] [Metodo: SumarDummy] [Tiempo_peticion: 0 ms]", 
+ "@version"=>"1", 
+ "@timestamp"=>"2016-05-26T08:11:47.682Z", 
+ "path"=>"/config-dir/logs/logstash2_100k/rastreator-delta.log", 
+ "host"=>"650e60609076", 
+ "type"=>"syslog-ng-3", 
+ "timestamp"=>"2016-05-26 07:38:36", 
+ "time_zone"=>"+0000", 
+ "Id_Usuario"=>"DummyUser65", 
+ "Id_Terminal"=>"56564132390f05bf5dd82a0f525a842c", 
+ "Id_Peticion"=>"1c314871dc809d947b78c7eaf55fd18a", 
+ "Modo "=>"INFO", 
+ "Tipo_evento"=>"FIN", 
+ "Resultado"=>"OK", 
+ "Servicio"=>"isf.servlets.ServicioDummy1", 
+ "Metodo"=>"SumarDummy", 
+ "Tiempo_peticion"=>0.0, 
+ "parseTime"=>1464248316, 
+ "Inicio_peticion"=>nil} 
+ 
+ {:level=>:error} 
+ 
+  Map: {
+  "TIMESTAMP_ENVIADA"=>"2016-05-26 08:23:44", 
+  "parseTime"=>1464251024, 
+  "parseTime3"=>0} ; 
+  
+  EventData: {"message"=>"2016-05-26 08:23:44 +0000

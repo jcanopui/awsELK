@@ -8,8 +8,9 @@ sudo usermod -a -G docker ec2-user
 
 # Instalar Github y descarregar nostre repo
 sudo yum install -y git
-
-git clone https://github.com/nostre_repo
+git clone https://github.com/jcanopui/awsELK 
+mv /home/ec2-user/awsELK/AWS /home/ec2-user/AWS/
+sudo rm -r /home/ec2-user/awsELK/
 
 #crear un build de logstash amb el agreggate
 docker build -t logstash_agreggate /home/ec2-user/AWS/docker_aggregate/
@@ -19,6 +20,7 @@ chmod -x /home/ec2-user/AWS/logs/log_peticiones_exactas/log_peticiones_exactas.j
 
 java -jar /home/ec2-user/AWS/logs/log_peticiones_exactas/log_peticiones_exactas.jar peticiones /home/ec2-user/AWS/logs/log_peticiones_exactas/services.properties 25000
 
+
 mv /home/ec2-user/AWS/logstash/logs/rastreator-delta.log.1 /home/ec2-user/AWS/logstash/logs/rastreator-delta1.log
 
 mv /home/ec2-user/AWS/logstash/logs/rastreator-delta.log.2 /home/ec2-user/AWS/logstash/logs/rastreator-delta2.log
@@ -27,3 +29,27 @@ mv /home/ec2-user/AWS/logstash/logs/rastreator-delta.log.3 /home/ec2-user/AWS/lo
 
 #executar el logsatsh amb el plugin agregate(i la configuracio del git)
 docker run -it --name logstash --rm -v /home/ec2-user/AWS/logstash:/config-dir logstash_agreggate logstash -f /config-dir/logstash.conf
+
+
+##
+TESTING
+#####
+
+#uninstall Docker
+sudo service docker stop
+sudo yum erase -y docker
+sudo rm -r /var/lib/docker/
+
+Logstash 100k
+->1
+docker run -it --name logstash1 --rm -v /home/ec2-user/AWS/logstash:/config-dir logstash_agreggate logstash -f /config-dir/logstash1_100k.conf
+
+->2
+docker run -it --name logstash2 --rm -v /home/ec2-user/AWS/logstash:/config-dir logstash_agreggate logstash -f /config-dir/logstash2_100k.conf
+
+Logstash 1kk
+->1
+docker run -it --name logstash1 --rm -v /home/ec2-user/AWS/logstash:/config-dir logstash_agreggate logstash -f /config-dir/logstash1_1kk.conf
+
+->2
+docker run -it --name logstash2 --rm -v /home/ec2-user/AWS/logstash:/config-dir logstash_agreggate logstash -f /config-dir/logstash2_1kk.conf
