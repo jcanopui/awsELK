@@ -11,8 +11,20 @@ Elasticsearch-> configurar la ruta de la data
 #Unicament es configura la ruta no es necesita utilitzar cap tipus de configuració, excepcio de la execusio de root dins del docker(per afegir poca configuració, elastic search te comandes Des.elquesigui)
 docker run -d --name some-elasticsearch -p 9200:9200 -p 9300:9300 -v /home/ec2-user/AWS/Elasticsearch/ElasticsearchData:/usr/share/elasticsearch/data elasticsearch -Des.insecure.allow.root=true
 
+
+docker run -d --name some-elasticsearch -p 9200:9200 -p 9300:9300 -p 2222:22 -v /home/ec2-user/AWS/Elasticsearch/ElasticsearchData:/usr/share/elasticsearch/data elasticsearch_ssh -Des.insecure.allow.root=true
+
+docker run -d -P --name some-elasticsearch_ssh elasticsearch_ssh
+
 #Infinite files
 docker run -d --ulimit nofile=98304:98304 --name some-elasticsearch -p 9200:9200 -p 9300:9300 -v /home/ec2-user/AWS/Elasticsearch/ElasticsearchData:/usr/share/elasticsearch/data elasticsearch -Des.insecure.allow.root=true
+
+
+
+docker run -d --ulimit nofile=98304:98304 --name some-elasticsearch_ssh -p 9200:9200 -p 9300:9300 -v /home/ec2-user/AWS/Elasticsearch/ElasticsearchData:/usr/share/elasticsearch/data elasticsearch_ssh /usr/sbin/sshd -Des.insecure.allow.root=true
+
+
+
 
 docker run --name some-elasticsearch6 -p 9200:9200 -p 9300:9300 -v /home/ec2-user/AWS/Elasticsearch/ElasticsearchData6:/usr/share/elasticsearch/data elasticsearch -Des.insecure.allow.root=true
 
