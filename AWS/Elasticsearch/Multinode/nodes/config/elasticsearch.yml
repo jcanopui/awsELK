@@ -1,0 +1,11 @@
+network.host: 0.0.0.0
+network.publish_host: _non_loopback:ipv4_
+cluster.name: mycluster
+node.name: node_${HOSTNAME}
+node.master: false
+node.data: true
+http.port : 9200
+tcp.port : 9300
+discovery.zen.ping.multicast.enabled: false
+
+discovery.zen.ping.unicast.hosts: ["52.203.178.151:9300"]

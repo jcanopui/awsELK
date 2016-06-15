@@ -34,6 +34,8 @@ docker run -it --name logstash --rm -v /home/ec2-user/AWS/logstash:/config-dir l
 ##
 TESTING
 #####
+nohup <<command>> > /dev/null &
+
 
 #uninstall Docker
 sudo service docker stop
@@ -51,5 +53,10 @@ Logstash 1kk
 ->1
 docker run -it --name logstash1 --rm -v /home/ec2-user/AWS/logstash:/config-dir logstash_agreggate logstash -f /config-dir/logstash1_1kk.conf
 
+docker run -it --name logstash1 --rm -v /home/ec2-user/AWS/logstash:/config-dir logstash logstash -f /config-dir/logstash1_1kk.conf
+
+
 ->2
 docker run -it --name logstash2 --rm -v /home/ec2-user/AWS/logstash:/config-dir logstash_agreggate logstash -f /config-dir/logstash2_1kk.conf
+
+docker run -it --name logstash2 --rm -v /home/ec2-user/AWS/logstash:/config-dir logstash logstash -f /config-dir/logstash2_1kk.conf
