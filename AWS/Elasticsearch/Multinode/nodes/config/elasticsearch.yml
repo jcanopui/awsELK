@@ -1,5 +1,5 @@
 network.host: 0.0.0.0
-network.publish_host: _non_loopback:ipv4_
+network.publish_host: 54.173.88.177
 cluster.name: mycluster
 node.name: node_${HOSTNAME}
 node.master: false

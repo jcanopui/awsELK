@@ -14,16 +14,18 @@ docker run -d --name some-elasticsearch -p 9200:9200 -p 9300:9300 -v /home/ec2-u
 
 docker run -d --name some-elasticsearch -p 9200:9200 -p 9300:9300 -p 2222:22 -v /home/ec2-user/AWS/Elasticsearch/ElasticsearchData:/usr/share/elasticsearch/data elasticsearch_ssh -Des.insecure.allow.root=true
 
+
+
 docker run -d -P --name some-elasticsearch_ssh elasticsearch_ssh
 
 #Infinite files
-docker run -d --ulimit nofile=98304:98304 --name some-elasticsearch -p 9200:9200 -p 9300:9300 -v /home/ec2-user/AWS/Elasticsearch/ElasticsearchData:/usr/share/elasticsearch/data elasticsearch -Des.insecure.allow.root=true
+docker run -d --ulimit nofile=98304:98304 --name some-elasticsearch -p 9200:9200 -p 9300:9300 -v /home/ec2-user/AWS/Elasticsearch/ElasticsearchData:/usr/share/elasticsearch/data elasticsearch
 
 
 
 docker run -d --ulimit nofile=98304:98304 --name some-elasticsearch_ssh -p 9200:9200 -p 9300:9300 -v /home/ec2-user/AWS/Elasticsearch/ElasticsearchData:/usr/share/elasticsearch/data elasticsearch_ssh /usr/sbin/sshd -Des.insecure.allow.root=true
 
-
+docker run --ulimit nofile=98304:98304 --name some-elasticsearch_ssh_marvel -p 9200:9200 -p 9300:9300 -p 2222:22 -p 8888:8888 -v /home/ec2-user/AWS/Elasticsearch/ElasticsearchData:/usr/share/elasticsearch/data elasticsearch_ssh_marvel
 
 
 docker run --name some-elasticsearch6 -p 9200:9200 -p 9300:9300 -v /home/ec2-user/AWS/Elasticsearch/ElasticsearchData6:/usr/share/elasticsearch/data elasticsearch -Des.insecure.allow.root=true
@@ -109,6 +111,10 @@ curl -XGET 'http://172.17.0.2:9200/_search?size=50&pretty=true'
 
 #Per buidar i eliminar totes les entrades del elasticsearch
 curl -XDELETE 'http://172.17.0.2:9200/_all'
+
+curl -XDELETE 'http://52.203.178.151:9200/_all'
+
+
 
 #Per comprobar quants nodes hi ha en el cluster i si estan actius
 /_cluster/health?pretty=true
