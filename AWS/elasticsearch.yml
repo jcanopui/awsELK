@@ -1,6 +1,0 @@
-cluster.name: elasticsearch
-
-node.name: ${HOSTNAME}
-
-node.master: true
-node.data: true
