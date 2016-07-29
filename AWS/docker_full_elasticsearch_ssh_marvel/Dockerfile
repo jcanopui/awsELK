@@ -51,6 +51,8 @@ COPY config ./config
 
 VOLUME /usr/share/elasticsearch/data
 
+VOLUME /usr/share/elasticsearch/config
+
 COPY docker-entrypoint.sh /
 
 RUN chmod +x /docker-entrypoint.sh
